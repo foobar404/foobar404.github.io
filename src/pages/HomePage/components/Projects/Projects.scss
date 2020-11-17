@@ -1,0 +1,64 @@
+.Projects{
+    height: 100%;
+    width: 100%;
+    display: flex;
+
+    .project{
+        height: 100%;
+        width: 20%;
+        overflow: hidden;
+        position: relative;
+        transition: width,height .25s ease;
+        cursor: pointer;
+        
+        iframe{
+            -webkit-appearance: none;
+            appearance: none;
+            height: 100vh;
+            width: 100vw;
+            z-index: 1;
+        }
+        .mask{
+            z-index: 2;
+            height: 100%;
+            width: 100%;
+            backdrop-filter: grayscale(1) blur(3px);
+            background:#000b;
+        }
+        iframe,.mask{
+            position: absolute;
+            top:0;
+            left:0;
+        }
+    }
+
+    .project:nth-child(1){
+        height: 60%;
+    }
+    .project:nth-child(2){
+        height: 70%;
+    }
+    .project:nth-child(3){
+        height: 80%;
+    }
+    .project:nth-child(4){
+        height: 70%;
+    }
+    .project:nth-child(5){
+        height: 60%;
+    }
+
+    .project:hover{
+        height: 100% !important;
+    }
+
+    .project.fullscreen{
+        height: 100% !important;
+        width: 100% !important;
+
+        mask{
+            opacity: 0;
+        }
+    }
+ 
+}
