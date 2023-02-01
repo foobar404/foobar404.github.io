@@ -1,0 +1,78 @@
+:root{
+    --color-background:#000;
+    --color-background-alt:#fff;
+    --color-primary:#cf0015;
+    --color-secondary:#87232f;
+}
+
+*::selection {
+    color: black;
+    background: yellow;
+}
+
+*::-webkit-scrollbar {
+    height: 15px;
+    width: 15px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--color-primary), var(--color-secondary));
+}
+
+*::-webkit-scrollbar {
+    background: black;
+}
+
+* {
+    font-family: 'Lato', sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+a{
+    text-decoration: none;
+}
+
+footer {
+    width: 100%;
+    min-height: 30px;
+    padding: 7px 0px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    flex-direction: column;
+    background: #000;
+    color: white;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer #barcode {
+    font-family: 'Libre Barcode 39', cursive;
+    color: white;
+    font-size: 40px;
+    margin-top: 3px;
+}
+
+#desktop {
+    height: 100%;
+    width: 95%;
+}
+
+#mobile {
+    height: 100%;
+    width: 100%;
+    display: none;
+}

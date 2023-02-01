@@ -1,0 +1,115 @@
+#headline_section {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background: var(--color-background);
+}
+
+#headline_section section {
+    width: 33.33%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    transition: .25s cubic-bezier(0, 1.24, 0.65, 0.81);
+    cursor: pointer;
+}
+
+#headline_section section:hover {
+    width: 40%;
+}
+
+#headline_section section video {
+    height: 100%;
+}
+
+.full {
+    width: 100% !important;
+}
+
+.hide {
+    width: 0 !important;
+}
+
+.poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--color-background-alt);
+}
+
+.poster h1 {
+    font-size: 34px;
+    color: #fff;
+}
+
+.poster {
+    background: var(--color-background);
+}
+
+section:hover .poster {
+    background: var(--color-primary);
+}
+
+.poster .content {
+    display: none;
+    font-size: 26px;
+    overflow: auto;
+}
+
+.side_poster {
+    width: 40% !important;
+    background: linear-gradient(to right, black, black, transparent) !important;
+    padding-top: 30px !important;
+    justify-content: start !important;
+    box-sizing: border-box;
+    padding: 20px;
+    z-index: 1;
+}
+
+.side_poster .content {
+    display: block !important;
+}
+
+.side_poster .content p {
+    max-width: 30ch;
+}
+
+.side_poster .content .link_btn {
+    text-align: center;
+    height: 40px;
+    width: 140px;
+    border-radius: 20px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width:800px) {
+    #headline_section {
+        flex-direction: column;
+    }
+
+    #headline_section section {
+        width: 100%;
+    }
+
+    #headline_section section:hover {
+        width: 100% !important;
+    }
+
+    .side_poster {
+        width: 100% !important;
+    }
+}
