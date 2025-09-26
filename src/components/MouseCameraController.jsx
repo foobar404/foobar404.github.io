@@ -1,40 +1,67 @@
-import React, { useRef, useEffect, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { useMouseParallax } from '../utils/useInteractions'
+import React, { useRef, useEffect } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
 
 const MouseCameraController = ({ children }) => {
   const groupRef = useRef()
-  const mousePosition = useMouseParallax(1.2) // Increased intensity for more responsiveness
-  const [scrollY, setScrollY] = useState(0)
+  const { camera } = useThree()
+  const mouseRef = useRef({ x: 0, y: 0 })
+  const scrollYRef = useRef(0)
+  const targetRotation = useRef({ x: 0, y: 0 })
+  const currentRotation = useRef({ x: 0, y: 0 })
 
-  // Listen to scroll events
+  // Mouse tracking
   useEffect(() => {
+    const handleMouseMove = (event) => {
+      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1
+      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  // Scroll tracking
+  useEffect(() => {
+    let ticking = false
+    
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          scrollYRef.current = window.scrollY
+          ticking = false
+        })
+        ticking = true
+      }
     }
     
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useFrame((state, delta) => {
-    if (groupRef.current) {
-      // Much more responsive mouse movement
-      const targetX = mousePosition.x * 1.5 // Increased from 0.5 to 1.5
-      const targetY = mousePosition.y * 0.8 // Increased from 0.3 to 0.8
+    if (groupRef.current && camera) {
+      const mouse = mouseRef.current
+      const scrollInfluence = scrollYRef.current * 0.0002
       
-      // Reduced scroll influence for focus on mouse control
-      const scrollInfluence = scrollY * 0.0002 // Reduced from 0.0005
+      // Calculate target rotations based on mouse position
+      targetRotation.current.x = mouse.y * 0.3 // Vertical mouse movement
+      targetRotation.current.y = mouse.x * 0.5 // Horizontal mouse movement
       
-      // Much faster, snappier interpolation
-      groupRef.current.rotation.y += (targetX - groupRef.current.rotation.y + scrollInfluence) * delta * 8 // Increased from 1.5 to 8
-      groupRef.current.rotation.x += (targetY - groupRef.current.rotation.x + scrollInfluence * 0.2) * delta * 8 // Increased from 1.5 to 8
+      // Smooth interpolation for camera panning
+      const lerpSpeed = delta * 3
+      currentRotation.current.x += (targetRotation.current.x - currentRotation.current.x) * lerpSpeed
+      currentRotation.current.y += (targetRotation.current.y - currentRotation.current.y) * lerpSpeed
       
-      // Minimal continuous rotation so mouse control is primary
-      groupRef.current.rotation.y += delta * (0.01 - scrollInfluence * 0.005) // Reduced base rotation
+      // Apply rotation to the group (which contains all 3D objects)
+      groupRef.current.rotation.x = currentRotation.current.x + scrollInfluence * 0.1
+      groupRef.current.rotation.y = currentRotation.current.y + scrollInfluence
       
-      // More responsive position shift
-      groupRef.current.position.z = Math.sin(scrollInfluence) * 0.3 // Reduced from 0.5
+      // Add gentle continuous rotation
+      groupRef.current.rotation.y += delta * 0.008
+      
+      // Optional: Subtle camera position shift for additional parallax
+      camera.position.x = mouse.x * 0.2
+      camera.position.y = mouse.y * 0.1
     }
   })
 

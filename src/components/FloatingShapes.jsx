@@ -28,11 +28,13 @@ const FloatingShapes = () => {
   const shapes = useMemo(() => {
     const shapeArray = []
     const shapeTypes = ['sphere', 'cube']
+    const materialTypes = ['glass', 'metal', 'neon', 'hologram', 'crystal']
     
     for (let i = 0; i < 200; i++) { // Doubled from 100 to 200 balls
       shapeArray.push({
         id: i,
         type: shapeTypes[Math.floor(Math.random() * shapeTypes.length)], // Random sphere or cube
+        materialType: materialTypes[Math.floor(Math.random() * materialTypes.length)], // Random material
         position: [
           (Math.random() - 0.5) * 30, // Even wider spread for more balls
           (Math.random() - 0.5) * 20, // Higher spread
@@ -71,8 +73,8 @@ const FloatingShapes = () => {
         child.position.y += shape.direction[1] * delta * 0.15 // Reduced from 0.3
         child.position.z += shape.direction[2] * delta * 0.2 // Reduced from 0.4
         
-        // Add upward movement based on scroll
-        child.position.y += scrollYRef.current * 0.01 * delta // Use ref instead of state
+        // Add upward movement based on scroll - reduced to 1/4 speed
+        child.position.y += scrollYRef.current * 0.0025 * delta // Reduced from 0.01 to 0.0025
         
         // Gentle sinusoidal movement for organic feel - reduced intensity
         child.position.x += Math.sin(time * 0.5) * delta * 0.1 // Reduced from 0.2
@@ -114,6 +116,68 @@ const FloatingShapes = () => {
       }
     }, [shape.type])
 
+    // Different material types for variety
+    const material = useMemo(() => {
+      switch (shape.materialType) {
+        case 'glass':
+          return (
+            <meshPhysicalMaterial
+              color={shape.color}
+              metalness={0.0}
+              roughness={0.0}
+              transmission={0.9}
+              transparent={true}
+              opacity={0.6}
+            />
+          )
+        case 'metal':
+          return (
+            <meshStandardMaterial
+              color={shape.color}
+              metalness={1.0}
+              roughness={0.2}
+            />
+          )
+        case 'neon':
+          return (
+            <meshBasicMaterial
+              color={shape.color}
+              transparent={true}
+              opacity={0.8}
+            />
+          )
+        case 'hologram':
+          return (
+            <meshPhongMaterial
+              color={shape.color}
+              transparent={true}
+              opacity={0.4}
+              shininess={100}
+            />
+          )
+        case 'crystal':
+          return (
+            <meshPhysicalMaterial
+              color={shape.color}
+              metalness={0.1}
+              roughness={0.0}
+              transparent={true}
+              opacity={0.7}
+            />
+          )
+        default:
+          return (
+            <meshStandardMaterial
+              color={shape.color}
+              metalness={0.2}
+              roughness={0.1}
+              transparent={true}
+              opacity={0.8}
+            />
+          )
+      }
+    }, [shape.materialType, shape.color])
+
     return (
       <mesh
         ref={meshRef}
@@ -122,17 +186,7 @@ const FloatingShapes = () => {
         scale={shape.scale}
       >
         {geometry}
-        <meshPhysicalMaterial
-          color={shape.color}
-          metalness={0.2}
-          roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          transparent
-          opacity={0.8}
-          emissive={shape.color}
-          emissiveIntensity={0.05}
-        />
+        {material}
       </mesh>
     )
   }

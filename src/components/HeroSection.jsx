@@ -11,16 +11,18 @@ const Scene = () => {
   useCursorInteraction()
   
   return (
-    <MouseCameraController>
-      <GradientSkybox />
-      <SceneLighting />
-      
-      {/* Futuristic Platform */}
-      <Platform />
-      
-      {/* Minimal floating shapes */}
-      <FloatingShapes />
-    </MouseCameraController>
+    <>
+      <MouseCameraController>
+        <GradientSkybox />
+        <SceneLighting />
+        
+        {/* Futuristic Platform - Hidden for now */}
+        {/* <Platform /> */}
+        
+        {/* Minimal floating shapes */}
+        <FloatingShapes />
+      </MouseCameraController>
+    </>
   )
 }
 
@@ -46,14 +48,24 @@ const HeroSection = () => {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar__content">
-          <a href="mailto:austinthemichaud@gmail.com" className="navbar__link">
-            austinthemichaud@gmail.com
-          </a>
-          <a href="https://www.linkedin.com/in/austin-michaud-9b25aa141/" target="_blank" rel="noopener noreferrer" className="navbar__link">
-            LinkedIn
-          </a>
-          <a href="https://github.com/foobar404" target="_blank" rel="noopener noreferrer" className="navbar__link">
-            GitHub
+          <div className="navbar__links">
+            <a href="mailto:austinthemichaud@gmail.com" className="navbar__link">
+              austinthemichaud@gmail.com
+            </a>
+            <a href="https://www.linkedin.com/in/austin-michaud-9b25aa141/" target="_blank" rel="noopener noreferrer" className="navbar__link">
+              LinkedIn
+            </a>
+            <a href="https://github.com/foobar404" target="_blank" rel="noopener noreferrer" className="navbar__link">
+              GitHub
+            </a>
+          </div>
+          <a href="/assets/resume.pdf" download="Austin_Michaud_Resume.pdf" className="navbar__resume-btn">
+            <span>Download Resume</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7,10 12,15 17,10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
           </a>
         </div>
       </nav>
@@ -68,11 +80,16 @@ const HeroSection = () => {
           gl={{ 
             antialias: false,
             alpha: true,
-            powerPreference: "default"
+            powerPreference: "high-performance",
+            preserveDrawingBuffer: false,
+            failIfMajorPerformanceCaveat: false
           }}
-          dpr={1}
+          dpr={[1, 2]}
+          onCreated={({ gl }) => {
+            gl.setClearColor('#000000', 0)
+          }}
         >
-          <Suspense fallback={null}>
+          <Suspense fallback={<LoadingFallback />}>
             <Scene />
           </Suspense>
         </Canvas>
@@ -105,7 +122,64 @@ const HeroSection = () => {
           <h1 className="hero__title">
             Austin Michaud
           </h1>
-          <div className="flex justify-center items-center mt-8">
+
+          
+          {/* Floating Tech Bubbles */}
+          <div className="tech-bubbles">
+            <div className="tech-bubble">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/blender/blender-original.svg" alt="Blender" />
+              <span className="tooltip">Blender - 3D modeling and animation for XR assets</span>
+            </div>
+            <div className="tech-bubble">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/godot/godot-original.svg" alt="Godot" />
+              <span className="tooltip">Godot Engine - Open-source game engine for XR development</span>
+            </div>
+            <div className="tech-bubble">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="50" fill="#DC2626"/>
+                <text x="50" y="70" textAnchor="middle" fontSize="45" fill="white" fontWeight="bold">XR</text>
+              </svg>
+              <span className="tooltip">WebXR - Web-based extended reality experiences</span>
+            </div>
+            <div className="tech-bubble">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                <path d="M50 10L80 80H20L50 10Z" fill="#EF2D5E"/>
+                <path d="M35 65L50 35L65 65H35Z" fill="#FFF"/>
+              </svg>
+              <span className="tooltip">A-Frame - Web framework for building VR experiences</span>
+            </div>
+            <div className="tech-bubble">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg" alt="Three.js" />
+              <span className="tooltip">Three.js - JavaScript 3D library for interactive graphics</span>
+            </div>
+            <div className="tech-bubble">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                <circle cx="30" cy="30" r="15" fill="#4A90E2" opacity="0.8"/>
+                <rect x="55" y="15" width="30" height="30" rx="5" fill="#7B68EE" opacity="0.8"/>
+                <polygon points="20,85 35,60 50,85" fill="#FF6B9D" opacity="0.8"/>
+                <path d="M65 85L85 65L85 85Z" fill="#50E3C2" opacity="0.8"/>
+              </svg>
+              <span className="tooltip">ShapesXR - Professional XR creation platform</span>
+            </div>
+            <div className="tech-bubble">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                <defs>
+                  <linearGradient id="gravityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FF4081"/>
+                    <stop offset="50%" stopColor="#9C27B0"/>
+                    <stop offset="100%" stopColor="#3F51B5"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#gravityGrad)" opacity="0.9"/>
+                <path d="M30 30Q50 15 70 30Q70 50 70 70Q50 85 30 70Q30 50 30 30Z" fill="#FFF" opacity="0.9"/>
+                <circle cx="50" cy="40" r="8" fill="url(#gravityGrad)"/>
+                <path d="M40 55L50 65L60 55" stroke="url(#gravityGrad)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              </svg>
+              <span className="tooltip">Gravity Sketch - VR design and modeling tool for 3D creation</span>
+            </div>
+          </div>
+
+          <div className="flex justify-center items-center mt-14">
             <button 
               className="btn btn--secondary"
               onClick={handleScrollToNext}
@@ -113,6 +187,7 @@ const HeroSection = () => {
               Scroll
             </button>
           </div>
+
         </div>
       </section>
 
