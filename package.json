@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://foobar404.github.io",
-  "scripts": {
+  "scripts": {  
     "start": "vite",
     "build": "vite build",
     "lint": "eslint .",
