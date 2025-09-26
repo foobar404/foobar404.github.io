@@ -132,19 +132,28 @@ a:hover {
   color: white;
   text-decoration: none;
   font-size: var(--text-sm);
-  font-weight: 600;
-  opacity: 0.8;
-  transition: all 0.3s ease;
-  padding: 0.5rem 1rem;
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-md);
   border-radius: 0.5rem;
-  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navbar__link:hover {
-  opacity: 1;
   color: var(--color-neon-pink);
   background: rgba(236, 72, 153, 0.1);
-  text-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Default: show full text, hide short text */
+.navbar__text {
+  display: none;
+}
+
+.navbar__text--full {
+  display: inline;
 }
 
 .navbar__resume-btn {
@@ -863,48 +872,197 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+  /* Navbar mobile styles - horizontal layout with icons */
   .navbar__content {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
   }
   
   .navbar__links {
-    flex-direction: column;
-    gap: 0.5rem;
-    order: 2;
+    flex-direction: row;
+    gap: 1rem;
+    order: 1;
+    flex: 1;
   }
   
   .navbar__resume-btn {
-    order: 1;
+    order: 2;
     font-size: var(--text-xs);
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.25rem;
+    flex-shrink: 0;
   }
   
   .navbar__link {
     font-size: var(--text-xs);
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 0.25rem;
+    gap: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  
+  /* Show short text on mobile, hide full text */
+  .navbar__text--full {
+    display: none;
+  }
+  
+  .navbar__text {
+    display: block;
+    font-size: 0.7rem;
+    margin-top: 0.125rem;
+  }
+  
+  .navbar__link svg {
+    flex-shrink: 0;
   }
 
+  /* Hero section mobile styles */
   .hero__title {
     font-size: var(--text-4xl);
+    line-height: 1.1;
+    text-align: center;
   }
   
   .hero__subtitle {
     font-size: var(--text-lg);
+    text-align: center;
+  }
+  
+  .hero__role {
+    font-size: var(--text-lg);
+    text-align: center;
+    margin-bottom: var(--space-md);
   }
   
   .hero__content {
     padding: var(--space-md);
+    text-align: center;
   }
 
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
+  /* Tech bubbles mobile optimization */
+  .tech-bubbles {
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+    justify-content: center;
+    max-width: 100%;
+    overflow: visible;
+    padding: 0 var(--space-sm);
+    flex-wrap: wrap;
   }
   
+  .tech-bubble {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .tech-bubble img,
+  .tech-bubble svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Tooltip adjustments for mobile */
+  .tooltip {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    max-width: 140px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    bottom: -45px;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  
+  /* Mobile: Show tooltip on tap/touch only */
+  .tech-bubble:active .tooltip {
+    opacity: 1 !important;
+    visibility: visible !important;
+    bottom: -45px;
+  }
+  
+  /* Remove focus outlines and tooltips on mobile */
+  .tech-bubble:focus {
+    outline: none;
+  }
+  
+  /* Prevent any initial hover/focus states on page load */
+  .tech-bubble {
+    transform: none !important;
+    border-color: rgba(236, 72, 153, 0.2) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+  }
+  
+  .tech-bubble:active {
+    transform: translateY(-5px) scale(1.1);
+    border-color: rgba(236, 72, 153, 0.6);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 15px 35px rgba(236, 72, 153, 0.3),
+      0 0 25px rgba(236, 72, 153, 0.2);
+  }
+  
+  .tech-bubble:active::before {
+    opacity: 0.7;
+  }
+  
+  /* Adjust tooltip arrow for mobile */
+  .tooltip::before {
+    border-bottom: 4px solid rgba(0, 0, 0, 0.9);
+  }
+
+  /* Button mobile styles */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: var(--text-sm);
+    min-width: 120px;
+  }
+
+  /* Project grid mobile */
+  .projects-grid {
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding: 0 5%; /* 5% on each side = 90% total width */
+  }
+  
+  .project-card {
+    min-height: 300px;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
+  
+  .project-image {
+    height: 180px;
+  }
+  
+  .project-content {
+    padding: 1.5rem;
+  }
+  
+  .project-content h3 {
+    font-size: var(--text-lg);
+  }
+  
+  .project-content p {
+    font-size: var(--text-sm);
+  }
+
+  /* Section titles mobile */
+  .section-title {
+    font-size: var(--text-3xl);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  
+  /* Tech grid mobile (legacy) */
   .tech-grid {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
@@ -948,15 +1106,53 @@ a:hover {
     font-size: 0.5rem;
   }
   
-  .project-card {
-    min-height: 300px;
+  /* Fullscreen sections mobile padding */
+  .fullscreen-section {
+    padding: var(--space-lg) var(--space-sm);
   }
   
-  .project-image {
-    height: 150px;
+  .section-content {
+    max-width: 100%;
+    padding: 0;
   }
   
-  .project-content {
-    padding: 1rem;
+  /* Mouse parallax reduction on mobile */
+  .hero__content {
+    transform: none !important;
+  }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 480px) {
+  .hero__title {
+    font-size: var(--text-3xl);
+  }
+  
+  .tech-bubbles {
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .tech-bubble {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .tech-bubble img,
+  .tech-bubble svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .tooltip {
+    font-size: 0.65rem;
+    max-width: 100px;
+    padding: 3px 6px;
+  }
+  
+  .btn {
+    padding: 0.625rem 1.25rem;
+    font-size: var(--text-xs);
   }
 }

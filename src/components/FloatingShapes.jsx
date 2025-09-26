@@ -28,13 +28,32 @@ const FloatingShapes = () => {
   const shapes = useMemo(() => {
     const shapeArray = []
     const shapeTypes = ['sphere', 'cube']
-    const materialTypes = ['glass', 'metal', 'neon', 'hologram', 'crystal']
+    const materialTypes = ['matte', 'wireframe'] // 80% matte, 20% wireframe
+    const primaryColors = [
+      '#ff0000', // Red
+      '#00ff00', // Green
+      '#0000ff', // Blue
+      '#ffff00', // Yellow
+      '#ff00ff', // Magenta
+      '#00ffff', // Cyan
+      '#ff8000', // Orange
+      '#8000ff', // Purple
+      '#80ff00', // Lime
+      '#ff0080', // Pink
+      '#0080ff', // Light Blue
+      '#ff8080'  // Light Red
+    ]
     
-    for (let i = 0; i < 200; i++) { // Doubled from 100 to 200 balls
+    // Reduce shapes on mobile for better performance
+    const isMobile = window.innerWidth <= 768
+    const shapeCount = isMobile ? 100 : 200
+    
+    for (let i = 0; i < shapeCount; i++) {
+      const isWireframe = Math.random() < 0.2 // 20% chance of wireframe
       shapeArray.push({
         id: i,
         type: shapeTypes[Math.floor(Math.random() * shapeTypes.length)], // Random sphere or cube
-        materialType: materialTypes[Math.floor(Math.random() * materialTypes.length)], // Random material
+        materialType: isWireframe ? 'wireframe' : 'matte',
         position: [
           (Math.random() - 0.5) * 30, // Even wider spread for more balls
           (Math.random() - 0.5) * 20, // Higher spread
@@ -49,10 +68,7 @@ const FloatingShapes = () => {
           (Math.random() - 0.5) * 1  // Reduced direction intensity
         ],
         scrollSensitivity: 0.3 + Math.random() * 0.5, // Reduced sensitivity
-        color: [
-          '#ec4899', '#8b5cf6', '#3b82f6', '#06b6d4', 
-          '#a855f7', '#d946ef', '#f59e0b', '#10b981'
-        ][Math.floor(Math.random() * 8)]
+        color: primaryColors[Math.floor(Math.random() * primaryColors.length)]
       })
     }
     return shapeArray
@@ -116,65 +132,29 @@ const FloatingShapes = () => {
       }
     }, [shape.type])
 
-    // Different material types for variety
+    // Choose material based on type
     const material = useMemo(() => {
-      switch (shape.materialType) {
-        case 'glass':
-          return (
-            <meshPhysicalMaterial
-              color={shape.color}
-              metalness={0.0}
-              roughness={0.0}
-              transmission={0.9}
-              transparent={true}
-              opacity={0.6}
-            />
-          )
-        case 'metal':
-          return (
-            <meshStandardMaterial
-              color={shape.color}
-              metalness={1.0}
-              roughness={0.2}
-            />
-          )
-        case 'neon':
-          return (
-            <meshBasicMaterial
-              color={shape.color}
-              transparent={true}
-              opacity={0.8}
-            />
-          )
-        case 'hologram':
-          return (
-            <meshPhongMaterial
-              color={shape.color}
-              transparent={true}
-              opacity={0.4}
-              shininess={100}
-            />
-          )
-        case 'crystal':
-          return (
-            <meshPhysicalMaterial
-              color={shape.color}
-              metalness={0.1}
-              roughness={0.0}
-              transparent={true}
-              opacity={0.7}
-            />
-          )
-        default:
-          return (
-            <meshStandardMaterial
-              color={shape.color}
-              metalness={0.2}
-              roughness={0.1}
-              transparent={true}
-              opacity={0.8}
-            />
-          )
+      if (shape.materialType === 'wireframe') {
+        return (
+          <meshBasicMaterial
+            color={shape.color}
+            wireframe={true}
+            transparent={true}
+            opacity={0.8}
+          />
+        )
+      } else {
+        return (
+          <meshPhysicalMaterial
+            color={shape.color}
+            metalness={0.0}
+            roughness={0.2}
+            clearcoat={1.0}
+            clearcoatRoughness={0.1}
+            transparent={true}
+            opacity={0.9}
+          />
+        )
       }
     }, [shape.materialType, shape.color])
 
