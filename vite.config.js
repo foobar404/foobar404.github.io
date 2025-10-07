@@ -5,9 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/', // Root path for foobar404.github.io (user/org site)
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
